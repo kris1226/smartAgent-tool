@@ -2,7 +2,7 @@ import {Schema, arrayOf, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import 'isomorphic-fetch';
 
-const API_ROOT = 'http://localhost:9000/'
+const AGENT_ROOT = 'http://localhost:9000/';
 
 // Action key that carries API call info interpreted by this Redux middleware.
 export const CALL_API = Symbol('Call API')
@@ -15,6 +15,8 @@ function getClientUrls(response) {
   }
   return link;
 }
+
+const GIT_API_ROOT = 'https://api.github.com/';
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
@@ -32,11 +34,8 @@ function callApi(endpoint, schema) {
       const clientsUrl = getClientsUrl(response);
       const nextPageUrl = getNextPageUrl(response)
 
-      return Object.assign({},
-        normalize(camelizedJson, schema),
-        { nextPageUrl }
-      )
-    })
+      return Object.assign({}, normalize(camelizedJson, schema), { nextPageUrl });
+    });
 }
 
 // We use this Normalizr schemas to transform API responses from a nested form
